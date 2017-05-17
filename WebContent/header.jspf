@@ -1,0 +1,11 @@
+<header>
+	<h1>No Place Like Home</h1>
+	<h2>Op zoek naar een thuis in Leuven</h2>
+	<nav>
+		<ul>
+			<li><a href="index.jsp">Home</a></li>
+			<li><a href="Controller?action=read">Overzicht</a></li>
+			<li><a href="form.jsp">Toevoegen</a></li>
+		</ul>
+	</nav>
+</header>

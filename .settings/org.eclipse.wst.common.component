@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="1TX4_VerdonckMaria">
+        <wb-resource deploy-path="/" source-path="/WebContent" tag="defaultRootSource"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/domain"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/ui"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/test"/>
+        <property name="java-output-path" value="/1TX4_VerdonckMaria/build/classes"/>
+        <property name="context-root" value="1TX4_VerdonckMaria"/>
+    </wb-module>
+</project-modules>

@@ -1,0 +1,10 @@
+<%@ page import="java.util.ArrayList"%>
+		<% 	if(request.getAttribute("errors")!=null) {
+			ArrayList<String> errors = (ArrayList<String>) request.getAttribute("errors");
+			if (errors.size() > 0) { 
+				for (String error: errors) {%>
+					<p class="error">- <%=error%></p>
+				<%	} %>	
+			<% 	}
+		}
+%>
