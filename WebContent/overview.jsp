@@ -35,12 +35,12 @@
 				<td><%=ap.getPrice()%></td>
 				<td><%=ap.getRooms()%></td>
 				<td><%=ap.getAddress()%></td>
-				<td><a href="<%=ap.getLink()%>">link</a></td>
+				<td class="link"><a href="<%=ap.getLink()%>">link</a></td>
 				<td><a href="Controller?action=update&id=<%=ap.getId()%>">Update</a></td>
 				<td><a href="Controller?action=delete&id=<%=ap.getId()%>">Delete</a></td>
 			</tr>
 			<%
-			}
+				}
 			%>
 		</table>
 		<p id="totCasino">De totale waarde van alle casinobedragen kleiner dan 1000 bedraagt <%=totCasino%> euro</p>

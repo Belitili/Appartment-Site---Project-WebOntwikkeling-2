@@ -18,10 +18,10 @@
 
 <main>
 	<article>
-		<h3>Toevoegen</h3>
+		<h3>Update</h3>
 		<%@include file="errorMessages.jspf" %>
 		<%Apartment ap = (Apartment) request.getAttribute("apartmentToUpdate");%>
-		<form name="addApartmentForm" method="POST" action="Controller?action=updateValuesApartment">
+		<form name="addApartmentForm" method="POST" action="Controller?action=updateValuesApartment" novalidate>
 			<label for="huurprijs">Huurprijs*</label>
 			<input type="number" id="huurprijs" name="huurprijs" value="<%=ap.getPrice()%>" required/>
 			<label for="aantalSlaapkamers">Aantal slaapkamers*</label>

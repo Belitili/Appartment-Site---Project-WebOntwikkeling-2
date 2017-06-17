@@ -2,7 +2,9 @@ package ui.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -13,6 +15,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import domain.db.ApartmentDB;
 import domain.model.Apartment;
+import domain.model.ApartmentFactory;
+import javafx.util.Pair;
 
 /**
  * Servlet implementation class Controller
@@ -20,6 +24,7 @@ import domain.model.Apartment;
 @WebServlet("/Controller")
 public class Controller extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private ApartmentDB db = ApartmentDB.getDB();
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -56,6 +61,12 @@ public class Controller extends HttpServlet {
 			case "delete" :
 				deleteApartment(request,response);
 				break;
+			case "deleteConfirm" :
+				deleteConfirm(request,response);
+				break;
+			case "search" :
+				searchApartment(request,response);
+				break;
 			case "update" :
 				updateApartment(request,response);
 				break;
@@ -69,7 +80,6 @@ public class Controller extends HttpServlet {
 	}
 	
 	protected void showApartments(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		ApartmentDB db = ApartmentDB.getDB();
 		ArrayList<Apartment> apartments = db.getApartments();
 		
 		request.setAttribute("totCasino", Double.toString(db.getTotalCasino()));
@@ -78,25 +88,17 @@ public class Controller extends HttpServlet {
 		view.forward(request, response);
 	}
 	
-	protected void addApartment(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		List<String> errors = new ArrayList<String>();
-		
-		String link = request.getParameter("linkAppt");
-		ApartmentDB db = ApartmentDB.getDB();
-		if (db.getApartmentFromLink(link)!=null) {
-			errors.add("Er is al een appartement met deze link.");
-		}
-		
-		if (Integer.parseInt(request.getParameter("huurprijs"))<200) {
-			errors.add("Zo'n lage huurprijs kan niet, helaas!");
-		}
+	protected void addApartment(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {		
+		Pair<Map<String,String>, Apartment> result = this.createErrorList(request);
+		Map<String,String> errors = result.getKey();
+		Apartment newAp = result.getValue();
 		
 		RequestDispatcher view = request.getRequestDispatcher("form.jsp");
 		
 		if (errors.size() == 0) {
 			boolean jackpot = false;
-			int casino = Integer.parseInt(request.getParameter("casino"));
-			if (casino >= 1000) {
+			int casinoInt = Integer.parseInt(request.getParameter("casino"));
+			if (casinoInt >= 1000) {
 				jackpot = true;
 			}
 			
@@ -107,27 +109,51 @@ public class Controller extends HttpServlet {
 			} else {
 				//Apartment enkel toevoegen bij niet jackpot
 				
-				db.addApartment(Integer.parseInt(request.getParameter("huurprijs")), Integer.parseInt(request.getParameter("aantalSlaapkamers")), request.getParameter("adres"), request.getParameter("linkAppt"), Integer.parseInt(request.getParameter("casino")));
+				try {
+					db.addApartment(request.getParameter("huurprijs"), request.getParameter("aantalSlaapkamers"), request.getParameter("adres"), request.getParameter("linkAppt"), request.getParameter("casino"));
+				} catch (Exception e) {
+					errors.put("linkAppt",e.getMessage());
+				}
 			}
 		}
 		
 		if (errors.size() > 0) {
 			request.setAttribute("errors", errors);
+			request.setAttribute("apartment", newAp);
 		}
 		
 		view.forward(request, response);
 	}
 	
 	protected void deleteApartment(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		ApartmentDB db = ApartmentDB.getDB();
+		String id = request.getParameter("id");
+		request.setAttribute("ap", db.getApartment(id));
+		RequestDispatcher view = request.getRequestDispatcher("deleteConfirm.jsp");
+		view.forward(request, response);
+	}
+	
+	protected void deleteConfirm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String id = request.getParameter("id");
 		db.deleteApartment(id);
 		
 		showApartments(request, response);
 	}
 	
+	protected void searchApartment(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String link = request.getParameter("linkAppt");
+		Apartment ap = db.getApartmentFromLink(link);
+		
+		if (ap!=null) {
+			request.setAttribute("foundApp", ap);
+		} else {
+			request.setAttribute("error", "Geen apartement gevonden met deze link.");
+		}
+		
+		RequestDispatcher view = request.getRequestDispatcher("search.jsp");
+		view.forward(request, response);
+	}
+	
 	protected void updateApartment(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		ApartmentDB db = ApartmentDB.getDB();
 		String id = request.getParameter("id");
 		Apartment ap = db.getApartment(id);
 		
@@ -138,24 +164,58 @@ public class Controller extends HttpServlet {
 	}
 	
 	protected void updateValuesApartment(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		ApartmentDB db = ApartmentDB.getDB();
-		List<String> errors = new ArrayList<String>();
-		
-		if (Integer.parseInt(request.getParameter("huurprijs"))<200) {
-			errors.add("Zo'n lage huurprijs kan niet, helaas! Zelfs slechts 1 kamer is zeker 200 euro.");
-		}
-		
-		RequestDispatcher view = request.getRequestDispatcher("form.jsp");
+		Map<String,String> errors = this.createErrorList(request).getKey();
+
+		String link = request.getParameter("linkAppt");
+		Apartment ap = db.getApartmentFromLink(link);
 		
 		if (errors.size() == 0) {
-			String link = request.getParameter("linkAppt");
-			Apartment ap = db.getApartmentFromLink(link);
 			db.updateApartment(Integer.toString(ap.getId()), request.getParameter("huurprijs"), request.getParameter("aantalSlaapkamers"), request.getParameter("adres"), ap.getLink(), request.getParameter("casino"));
 			showApartments(request, response);
 		} else {
+			request.setAttribute("apartmentToUpdate", ap);
 			request.setAttribute("errors", errors);
+			RequestDispatcher view = request.getRequestDispatcher("formUpdate.jsp");
+			view.forward(request, response);
+		}
+	}
+	
+	private Pair<Map<String, String>, Apartment> createErrorList(HttpServletRequest request) {
+		String price = request.getParameter("huurprijs");
+		String rooms = request.getParameter("aantalSlaapkamers");
+		String address = request.getParameter("adres");
+		String link = request.getParameter("linkAppt");
+		String casino = request.getParameter("casino");
+		Map<String, String> errors = new HashMap<String, String>();
+		
+		Apartment newAp = ApartmentFactory.createApartment();
+		
+		try {
+			newAp.setPrice(price);
+		} catch (Exception e) {
+			errors.put("huurprijs", e.getMessage());
+		}
+		try {
+			newAp.setRooms(rooms);
+		} catch (Exception e) {
+			errors.put("aantalSlaapkamers", e.getMessage());
+		}
+		try {
+			newAp.setAddress(address);
+		} catch (Exception e) {
+			errors.put("adres", e.getMessage());
+		}
+		try {
+			newAp.setLink(link);;
+		} catch (Exception e) {
+			errors.put("linkAppt", e.getMessage());
+		}
+		try {
+			newAp.setCasino(casino);
+		} catch (Exception e) {
+			errors.put("casino", e.getMessage());
 		}
 		
-		view.forward(request, response);
+		return new Pair<>(errors,newAp);
 	}
 }

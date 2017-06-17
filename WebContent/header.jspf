@@ -6,6 +6,7 @@
 			<li><a href="index.jsp">Home</a></li>
 			<li><a href="Controller?action=read">Overzicht</a></li>
 			<li><a href="form.jsp">Toevoegen</a></li>
+			<li><a href="search.jsp">Zoeken</a></li>
 		</ul>
 	</nav>
 </header>

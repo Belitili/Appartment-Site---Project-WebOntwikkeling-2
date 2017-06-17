@@ -3,6 +3,7 @@ package domain.db;
 import java.util.*;
 
 import domain.model.Apartment;
+import domain.model.ApartmentFactory;
 
 //Singleton DB
 public final class ApartmentDB {
@@ -10,9 +11,8 @@ public final class ApartmentDB {
 	private static volatile ApartmentDB instance = null;
 	private static ArrayList<Apartment> apartments =  new ArrayList<Apartment>();
 	//Some starter values in DB
-	private static Apartment ap1 = new Apartment(0, 650, 2, "Spreeuwenstraat, Kessel-Lo", "http://www.immoweb.be/nl/zoekertje/appartement/te-huur/kessel-lo/3010/id6772319", 875);
-	private static Apartment ap2 = new Apartment(1, 700, 2, "Heverlee", "http://www.immojanstas.be/nl/aanbod/detail.php?pageid=14&sort=&type=&id=6518", 456);
-	private static int idCounter = 2;
+	private static Apartment ap1 = ApartmentFactory.createApartment("650", "2", "Spreeuwenstraat, Kessel-Lo", "http://www.immoweb.be/nl/zoekertje/appartement/te-huur/kessel-lo/3010/id6772319", "875");
+	private static Apartment ap2 = ApartmentFactory.createApartment("700", "2", "Heverlee", "http://www.immojanstas.be/nl/aanbod/detail.php?pageid=14&sort=&type=&id=6518", "456");
 	
 	private ApartmentDB() {}
 	
@@ -29,9 +29,11 @@ public final class ApartmentDB {
 		return instance;
 	}
 	
-	public void addApartment(int price, int rooms, String address, String link, int casino) {
-		Apartment apartment = new Apartment(idCounter, price, rooms, address, link, casino);
-		idCounter++;
+	public void addApartment(String price, String rooms, String address, String link, String casino) throws Exception {
+		if (this.getApartmentFromLink(link)!=null) {
+			throw new Exception("Er is al een apartement in onze databank met deze link.");
+		}
+		Apartment apartment = ApartmentFactory.createApartment(price, rooms, address, link, casino);
 		apartments.add(apartment);
 	}
 	
@@ -66,10 +68,10 @@ public final class ApartmentDB {
 	public void updateApartment(String id, String price, String rooms, String address, String link, String casino) {
 		
 		Apartment ap = this.getApartment(id);
-		ap.setPrice(Integer.parseInt(price));
-		ap.setRooms(Integer.parseInt(rooms));
+		ap.setPrice(price);
+		ap.setRooms(rooms);
 		ap.setAddress(address);
-		ap.setCasino(Integer.parseInt(casino));
+		ap.setCasino(casino);
 	}
 	
 	public ArrayList<Apartment> getApartments() {
@@ -81,7 +83,7 @@ public final class ApartmentDB {
 		int nrApp = 0;
 		for (Apartment apartment: apartments) {
 			nrApp++;
-			total = total + apartment.getPrice();
+			total = total + Integer.valueOf(apartment.getPrice());
 		}
 		return total/nrApp;
 	}
@@ -89,7 +91,7 @@ public final class ApartmentDB {
 	public int getTotalCasino() {
 		int total = 0;
 		for (Apartment apartment: apartments) {
-			total = total + apartment.getCasino();
+			total = total + Integer.valueOf(apartment.getCasino());
 		}
 		return total;
 	}

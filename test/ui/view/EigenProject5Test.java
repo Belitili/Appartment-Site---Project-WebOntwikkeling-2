@@ -27,7 +27,7 @@ public class EigenProject5Test {
 	
 	@Before
 	public void setUp() {
-		System.setProperty("webdriver.chrome.driver", "C:\\Users\\Marie\\OneDrive\\UCLL\\Web2\\chromedriver_win32\\chromedriver.exe");
+		System.setProperty("webdriver.chrome.driver", "WebContent\\chromedriver_win32\\chromedriver.exe");
 		driver = new ChromeDriver();
 	}
 	
@@ -42,7 +42,7 @@ public class EigenProject5Test {
 
 	@Test
 	public void alsFormulierLeegIngevuldIsWordtFormulierOpnieuwGetoond() {
-		driver.get(url + "form.html");
+		driver.get(url + "form.jsp");
 		vulFormulierIn("","2","","","");
 
 		assertEquals("TOEVOEGEN", driver.findElement(By.tagName("h3")).getText());
@@ -51,7 +51,7 @@ public class EigenProject5Test {
 
 	@Test
 	public void alsFormulierCorrectIngevuldIsWordtOverzichtMetNieuweWaardeGetoond() {
-		driver.get(url + "form.html");
+		driver.get(url + "form.jsp");
 		String price = "700";
 		String rooms = "3";
 		String address = "Heverlee";
@@ -61,10 +61,10 @@ public class EigenProject5Test {
 
 		assertEquals("Bevestiging - No Place Like Home", driver.getTitle());
 		
-		driver.findElement(By.cssSelector("a[href*='showOverviewServlet']")).click();
+		driver.findElement(By.cssSelector("a[href*='Controller?action=read']")).click();
 		
 		ArrayList<WebElement> allTd = (ArrayList<WebElement>) driver.findElements(By.cssSelector("main td"));
-		ArrayList<WebElement> allLinks = (ArrayList<WebElement>) driver.findElements(By.cssSelector("main tr td:last-child a"));
+		ArrayList<WebElement> allLinks = (ArrayList<WebElement>) driver.findElements(By.cssSelector(".link a"));
 
 		assertTrue(allTdContains(price, allTd));
 		assertTrue(allTdContains(rooms, allTd));
@@ -85,7 +85,7 @@ public class EigenProject5Test {
 	    linkOverview.click();
 	    
 		ArrayList<WebElement> tableElements = (ArrayList<WebElement>) driver.findElements(By.tagName("td"));
-		ArrayList<WebElement> allLinks = (ArrayList<WebElement>) driver.findElements(By.cssSelector("main tr td:last-child a"));
+		ArrayList<WebElement> allLinks = (ArrayList<WebElement>) driver.findElements(By.cssSelector(".link a"));
 		
 		ApartmentDB db = ApartmentDB.getDB();
 		ArrayList<Apartment> apartments = db.getApartments();
@@ -93,14 +93,16 @@ public class EigenProject5Test {
 		int teller = 0;
 		int linkTeller = 0;
 		for (int i = 0; i < apartments.size(); i++) {
-			assertEquals(Integer.toString(apartments.get(i).getPrice()), tableElements.get(teller).getText());
+			assertEquals(apartments.get(i).getPrice(), tableElements.get(teller).getText());
 			teller++;
-			assertEquals(Integer.toString(apartments.get(i).getRooms()), tableElements.get(teller).getText());
+			assertEquals(apartments.get(i).getRooms(), tableElements.get(teller).getText());
 			teller++;
 			assertEquals(apartments.get(i).getAddress(), tableElements.get(teller).getText());
 			teller++;
 			assertEquals(apartments.get(i).getLink(), allLinks.get(linkTeller).getAttribute("href")); 
 			linkTeller++;
+			teller++;
+			teller++;
 			teller++;
 		}
 
@@ -108,7 +110,7 @@ public class EigenProject5Test {
 
 	@Test
 	public void alsFormulierJackpotDanWordtJackpotSchermGetoond() {
-		driver.get(url + "form.html");
+		driver.get(url + "form.jsp");
 		String price = "700";
 		String rooms = "3";
 		String address = "Heverlee";
