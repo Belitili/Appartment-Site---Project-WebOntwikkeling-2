@@ -154,7 +154,12 @@ public class Controller extends HttpServlet {
 		String id = request.getParameter("id");
 		Apartment ap = db.getApartment(id);
 		
-		request.setAttribute("apartmentToUpdate", ap);
+		request.setAttribute("huurprijsWaarde", ap.getPrice());
+		request.setAttribute("aantalSlaapkamersWaarde", ap.getRooms());
+		request.setAttribute("adresWaarde", ap.getAddress());
+		request.setAttribute("linkApptStatus", "OK");
+		request.setAttribute("linkApptWaarde", ap.getLink());
+		request.setAttribute("casinoWaarde", ap.getCasino());
 		
 		RequestDispatcher view = request.getRequestDispatcher("formUpdate.jsp");
 		view.forward(request, response);

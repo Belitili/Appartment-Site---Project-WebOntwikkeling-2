@@ -22,6 +22,7 @@
 		<h3>Toevoegen</h3>
 		<form name="addApartmentForm" method="POST" action="Controller?action=create" novalidate>
 			<%@include file="aptForm.jspf" %>
+			<input type="submit" value="Toevoegen"/>
 		</form>
 		<p id="reference">*Verplichte velden</p>
 	</article>

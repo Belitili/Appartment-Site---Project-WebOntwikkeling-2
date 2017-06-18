@@ -23,6 +23,7 @@
 		<%Apartment ap = (Apartment) request.getAttribute("apartmentToUpdate");%>
 		<form name="addApartmentForm" method="POST" action="Controller?action=updateValuesApartment" novalidate>
 			<%@include file="aptForm.jspf" %>
+			<input type="submit" value="Update"/>
 		</form>
 		<p id="reference">*Verplichte velden</p>
 	</article>
