@@ -181,8 +181,8 @@ footer {
 #errors {
 	background-color: rgb(162,80,94); 
 	border-radius: 15px;
-	padding: 3px;
-	margin: 3px  0;
+	padding: 5px;
+	margin: 5px  0;
 }
 label.NOK{
 	color: red;
