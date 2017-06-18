@@ -22,17 +22,7 @@
 		<%@include file="errorMessages.jspf" %>
 		<%Apartment ap = (Apartment) request.getAttribute("apartmentToUpdate");%>
 		<form name="addApartmentForm" method="POST" action="Controller?action=updateValuesApartment" novalidate>
-			<label for="huurprijs">Huurprijs*</label>
-			<input type="number" id="huurprijs" name="huurprijs" value="<%=ap.getPrice()%>" required/>
-			<label for="aantalSlaapkamers">Aantal slaapkamers*</label>
-			<input type="number" id="aantalSlaapkamers" name="aantalSlaapkamers" min="1" value="<%=ap.getRooms()%>" required/>
-			<label for="adres">Adres*</label>
-			<input type="text" id="adres" name="adres" value="<%=ap.getAddress()%>" required/>
-			<label for="linkAppt">Link*</label>
-			<input type="url" id="linkAppt" name="linkAppt" value="<%=ap.getLink()%>" readonly/>
-			<label for="casino">Casino</label>
-			<input type="number" id="casino" name="casino" value="<%=ap.getCasino()%>">
-			<input type="submit" value="Update"/>
+			<%@include file="aptForm.jspf" %>
 		</form>
 		<p id="reference">*Verplichte velden</p>
 	</article>

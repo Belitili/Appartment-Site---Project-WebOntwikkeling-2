@@ -89,9 +89,7 @@ public class Controller extends HttpServlet {
 	}
 	
 	protected void addApartment(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {		
-		Pair<Map<String,String>, Apartment> result = this.createErrorList(request);
-		Map<String,String> errors = result.getKey();
-		Apartment newAp = result.getValue();
+		Map<String,String> errors = this.createErrorList(request);
 		
 		RequestDispatcher view = request.getRequestDispatcher("form.jsp");
 		
@@ -119,7 +117,6 @@ public class Controller extends HttpServlet {
 		
 		if (errors.size() > 0) {
 			request.setAttribute("errors", errors);
-			request.setAttribute("apartment", newAp);
 		}
 		
 		view.forward(request, response);
@@ -164,7 +161,7 @@ public class Controller extends HttpServlet {
 	}
 	
 	protected void updateValuesApartment(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Map<String,String> errors = this.createErrorList(request).getKey();
+		Map<String,String> errors = this.createErrorList(request);
 
 		String link = request.getParameter("linkAppt");
 		Apartment ap = db.getApartmentFromLink(link);
@@ -180,7 +177,7 @@ public class Controller extends HttpServlet {
 		}
 	}
 	
-	private Pair<Map<String, String>, Apartment> createErrorList(HttpServletRequest request) {
+	private Map<String, String> createErrorList(HttpServletRequest request) {
 		String price = request.getParameter("huurprijs");
 		String rooms = request.getParameter("aantalSlaapkamers");
 		String address = request.getParameter("adres");
@@ -192,30 +189,45 @@ public class Controller extends HttpServlet {
 		
 		try {
 			newAp.setPrice(price);
+			request.setAttribute("huurprijsStatus", "OK");
+			request.setAttribute("huurprijsWaarde", price);
 		} catch (Exception e) {
+			request.setAttribute("huurprijsStatus", "NOK");
 			errors.put("huurprijs", e.getMessage());
 		}
 		try {
 			newAp.setRooms(rooms);
+			request.setAttribute("aantalSlaapkamersStatus", "OK");
+			request.setAttribute("aantalSlaapkamersWaarde", rooms);
 		} catch (Exception e) {
+			request.setAttribute("aantalSlaapkamersStatus", "NOK");
 			errors.put("aantalSlaapkamers", e.getMessage());
 		}
 		try {
 			newAp.setAddress(address);
+			request.setAttribute("adresStatus", "OK");
+			request.setAttribute("adresWaarde", address);
 		} catch (Exception e) {
+			request.setAttribute("adresStatus", "NOK");
 			errors.put("adres", e.getMessage());
 		}
 		try {
-			newAp.setLink(link);;
+			newAp.setLink(link);
+			request.setAttribute("linkApptStatus", "OK");
+			request.setAttribute("linkApptWaarde", link);
 		} catch (Exception e) {
+			request.setAttribute("linkApptStatus", "NOK");
 			errors.put("linkAppt", e.getMessage());
 		}
 		try {
 			newAp.setCasino(casino);
+			request.setAttribute("casinoStatus", "OK");
+			request.setAttribute("casinoWaarde", casino);
 		} catch (Exception e) {
+			request.setAttribute("casinoStatus", "NOK");
 			errors.put("casino", e.getMessage());
 		}
 		
-		return new Pair<>(errors,newAp);
+		return errors;
 	}
 }

@@ -18,26 +18,10 @@
 
 <main>
 	<article>
-		<%	Apartment ap = null;
-			boolean repeat = false;
-			if(request.getAttribute("errors")!=null) { 
-				repeat = true;
-				ap = (Apartment) request.getAttribute("apartment"); %>
-				<%@include file="errorMessages.jspf" %>
-		<%	} %>
+		<%@include file="errorMessages.jspf" %>
 		<h3>Toevoegen</h3>
 		<form name="addApartmentForm" method="POST" action="Controller?action=create" novalidate>
-			<label for="huurprijs">Huurprijs*</label>
-			<input type="number" id="huurprijs" name="huurprijs" min=0 required value="<%= repeat ? ap.getPrice() : "" %>" />
-			<label for="aantalSlaapkamers">Aantal slaapkamers*</label>
-			<input type="number" id="aantalSlaapkamers" name="aantalSlaapkamers" min=1 value=2 required value="<%= repeat ? ap.getRooms() : "" %>" />
-			<label for="adres">Adres*</label>
-			<input type="text" id="adres" name="adres" required value="<%= repeat ? ap.getAddress() : "" %>" />
-			<label for="linkAppt">Link*</label>
-			<input type="url" id="linkAppt" name="linkAppt" required value="<%= repeat ? ap.getLink() : "" %>" />
-			<label for="casino">Casino</label>
-			<input type="number" id="casino" name="casino" min=0 value="<%= repeat ? ap.getCasino() : "" %>" />
-			<input type="submit" value="Toevoegen"/>
+			<%@include file="aptForm.jspf" %>
 		</form>
 		<p id="reference">*Verplichte velden</p>
 	</article>

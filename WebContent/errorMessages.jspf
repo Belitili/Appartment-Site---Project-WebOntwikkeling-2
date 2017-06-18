@@ -1,11 +1,11 @@
 <%@ page import="java.util.HashMap"%>
+<%	if(request.getAttribute("errors")!=null) { %>
 <div id="errors">
-<%	if(request.getAttribute("errors")!=null) {
-		HashMap<String,String> errors = (HashMap<String,String>) request.getAttribute("errors");
+<%		HashMap<String,String> errors = (HashMap<String,String>) request.getAttribute("errors");
 		if (errors.size() > 0) { 
-			for (String error: errors.values()) {%>
+			for (String error: errors.values()) { %>
 				<p class="error">- <%=error%></p>
 			<%	} %>	
-		<% 	}
-	} %>
+		<% 	} %>
 </div>
+<%	} %>
