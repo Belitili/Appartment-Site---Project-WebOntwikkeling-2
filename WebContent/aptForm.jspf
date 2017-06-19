@@ -1,9 +1,9 @@
 			<label for="huurprijs" class="<%= request.getAttribute("huurprijsStatus") %>">Huurprijs*</label>
 			<input type="number" class="<%= request.getAttribute("huurprijsStatus") %>" id="huurprijs" name="huurprijs" min=0 required value="<%= request.getAttribute("huurprijsWaarde")!=null ? request.getAttribute("huurprijsWaarde") : "" %>" />
 			<label for="aantalSlaapkamers" class="<%= request.getAttribute("aantalSlaapkamersStatus") %>">Aantal slaapkamers*</label>
-			<input type="number" class="<%= request.getAttribute("aantalSlaapkamersStatus") %> id="aantalSlaapkamers" name="aantalSlaapkamers" min=1 value=2 required value="<%= request.getAttribute("aantalSlaapkamersWaarde")!=null ? request.getAttribute("aantalSlaapkamersWaarde") : "" %>" />
+			<input type="number" class="<%= request.getAttribute("aantalSlaapkamersStatus") %>" id="aantalSlaapkamers" name="aantalSlaapkamers" min=1 value=2 required value="<%= request.getAttribute("aantalSlaapkamersWaarde")!=null ? request.getAttribute("aantalSlaapkamersWaarde") : "" %>" />
 			<label for="adres" class="<%= request.getAttribute("adresStatus") %>">Adres*</label>
-			<input type="text" class="<%= request.getAttribute("adresStatus") %> id="adres" name="adres" required value="<%= request.getAttribute("adresWaarde")!=null ? request.getAttribute("adresWaarde") : "" %>" />
+			<input type="text" class="<%= request.getAttribute("adresStatus") %>" id="adres" name="adres" required value="<%= request.getAttribute("adresWaarde")!=null ? request.getAttribute("adresWaarde") : "" %>" />
 			<label for="linkAppt" class="<%= request.getAttribute("linkApptStatus") %>">Link*</label>
 			<input type="url" <%= request.getAttribute("linkApptStatus")=="OK" ? "readonly" : "" %> class="<%= request.getAttribute("linkApptStatus") %>" id="linkAppt" name="linkAppt" required value="<%= request.getAttribute("linkApptWaarde")!=null ? request.getAttribute("linkApptWaarde") : "" %>" />
 			<label for="casino" class="<%= request.getAttribute("casinoStatus") %>">Casino*</label>

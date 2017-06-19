@@ -11,14 +11,10 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 import domain.db.ApartmentDB;
 import domain.model.Apartment;
 
-//!!!OPMERKING!!!: Alle testen werkten met originele project, zie cycloneServer r0298778_project_appartemente
-//Wegens tijdsgebrek nu niet alle fouten opgespoord, nieuwe test werkt wel!
 
 public class EigenProject5Test {
 	
@@ -42,8 +38,7 @@ public class EigenProject5Test {
 
 	@Test
 	public void alsFormulierLeegIngevuldIsWordtFormulierOpnieuwGetoond() {
-		driver.get(url + "form.jsp");
-		vulFormulierIn("","2","","","");
+		this.vulFormulierIn("","2","","","");
 
 		assertEquals("TOEVOEGEN", driver.findElement(By.tagName("h3")).getText());
 		assertEquals("Toevoegen - No Place Like Home", driver.getTitle());
@@ -140,11 +135,13 @@ public class EigenProject5Test {
 	}
 
 	private void vulFormulierIn(String price, String rooms, String address, String link, String casino) {
+		driver.get(url + "form.jsp");
+		
 		WebElement priceField = driver.findElement(By.id("huurprijs"));
 		priceField.clear();
 		priceField.sendKeys(price);
 
-		WebElement roomsField = driver.findElement(By.id("aantalSlaapkamers"));
+		WebElement roomsField = driver.findElement(By.cssSelector("#aantalSlaapkamers"));
 		roomsField.clear();
 		roomsField.sendKeys(rooms);
 
